@@ -20,4 +20,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->patch('/users/{id}', 'UserController@update');
     $router->delete('/users/{id}', 'UserController@delete');
     
+    $router->get('/usersjob', 'UserJobController@index');
+    $router->get('/userjob/{id}', 'UserJobController@show'); 
 });
