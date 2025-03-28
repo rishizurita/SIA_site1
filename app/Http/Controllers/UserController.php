@@ -75,10 +75,14 @@ class UserController extends Controller
             'username' => 'max:20',
             'password' => 'max:20',
             'gender' => 'in:Male,Female',
+            'jobid' => 'required|numeric|min:1|not_in:0',
         ];
 
         $this->validate($request, $rules);
-        $user = User::find($id);
+        $user = UserJob::findOrFail($request->jobid);
+        $user = User::findOrFail($id);
+
+        $user->fill($request->all());
 
         if (!$user) {
             return $this->errorResponse('User ID does not exist', Response::HTTP_NOT_FOUND);
