@@ -41,22 +41,39 @@ class UserController extends Controller
     }
 
     /*Add a new user*/
-    public function add(Request $request){
-        $rules = [
-            'username' => 'required|max:20',
-            'password' => 'required|max:20',
-            'gender' => 'required|in:Male,Female',
-            'jobid' =>'required|numeric|min:1|not_in:0',
-        ];
-        
-        $this->validate($request, $rules);
+    public function add(Request $request)
+{
+    // Validation rules for the request
+    $rules = [
+        'username' => 'required|max:20',
+        'password' => 'required|max:20',
+        'gender' => 'required|in:Male,Female',
+        'jobid' => 'nullable|numeric|min:1|exists:tbluserjob,jobid',  // Allow jobid to be nullable and check if it exists
+    ];
 
-        // validate if jobid is found in the table tbluserjob
-        $user = UserJob::findOrFail($request->jobid());
-        $user = User::create($request->all());
+    // Validate incoming request data
+    $this->validate($request, $rules);
 
-        return $this->successResponse($user, Response::HTTP_CREATED);
+    // If jobid is provided, check if it exists in tbluserjob
+    if ($request->has('jobid')) {
+        $userjob = UserJob::find($request->jobid);
+        if (!$userjob) {
+            return $this->errorResponse('Job ID does not exist in the job table', Response::HTTP_NOT_FOUND);
+        }
     }
+
+    // Create the user record
+    $user = User::create([
+        'username' => $request->username,
+        'password' => $request->password,
+        'gender' => $request->gender,
+        'jobid' => $request->jobid,  // Include jobid if provided
+    ]);
+
+    // Return a successful response
+    return $this->successResponse($user, Response::HTTP_CREATED);
+}
+
 
     /*Show details of a single user*/
     public function show($id){
@@ -79,7 +96,7 @@ class UserController extends Controller
         ];
 
         $this->validate($request, $rules);
-        $user = UserJob::findOrFail($request->jobid);
+        $userjob = UserJob::findOrFail($request->jobid);
         $user = User::findOrFail($id);
 
         $user->fill($request->all());
