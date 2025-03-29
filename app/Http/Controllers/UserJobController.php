@@ -1,41 +1,43 @@
 <?php
 namespace App\Http\Controllers;
-//use App\User;
-use App\Models\UserJob; // <-- your model islocated inside Models Folder
-use Illuminate\Http\Response; // Response Components
-use App\Traits\ApiResponser; // <-- use to standardized our code for api response
-use Illuminate\Http\Request; // <-- handling http request in lumen
-use DB; // <-- if your not using lumen eloquent you can use DBcomponent in lumen
+
+use App\Models\UserJob;
+use Illuminate\Http\Response;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
 
 class UserJobController extends Controller
 {
-    // use to add your Traits ApiResponser
+    // Use ApiResponser trait for standardized API responses
     use ApiResponser;
+
     private $request;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
     /**
-     * Return the list of usersjob
+     * Return the list of user jobs.
+     * 
      * @return Illuminate\Http\Response
      */
     public function index()
     {
-        $usersjob = UserJob::all();
-        return $this->successResponse($usersjob);
-
+        $userJobs = UserJob::all();
+        return $this->successResponse($userJobs);
     }
+
     /**
-     * Obtains and show one userjob
+     * Obtains and shows one user job.
+     * 
+     * @param int $id
      * @return Illuminate\Http\Response
      */
     public function show($id)
     {
-        $userjob = UserJob::findOrFail($id);
-        return $this->successResponse($userjob);
-
+        $userJob = UserJob::findOrFail($id); // This will return 404 if not found
+        return $this->successResponse($userJob);
     }
 }
-
