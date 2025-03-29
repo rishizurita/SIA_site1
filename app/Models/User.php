@@ -1,30 +1,36 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
-    //name of table
+    // Name of table
     protected $table = 'table_user';
-    // column sa table
+
+    // Columns of table
     protected $fillable = [
         'username',
         'password',
-        'gender'
+        'gender',
+        'jobid'  // Add jobid to the fillable array if it exists in the users table
     ];
-    public $timestamps = false;
 
-    // Explicitly disable timestamp fields
+    // Disable timestamps in Lumen
+    public $timestamps = false;
     const CREATED_AT = null;
     const UPDATED_AT = null;
-    protected $primaryKey = 'userid';
-    
-        // fields must be hidden like password
-    // the attribute excluded from the model's JSON form
-    protected $hidden = [
-        'password'
-    ];
 
+    // Custom primary key field name
+    protected $primaryKey = 'userid';
+
+    // Exclude sensitive fields from JSON responses
+    protected $hidden = ['password'];
+
+    // Define relationship with the UserJob model
+    public function job()
+    {
+        return $this->belongsTo(UserJob::class, 'jobid', 'jobid');
+    }
 }
