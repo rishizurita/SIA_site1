@@ -7,7 +7,7 @@ namespace App\Models;
 // library to create Model under lumen
 use Illuminate\Database\Eloquent\Model;
 
-class USerJob extends Model{
+class UserJob extends Model{
 
     // name of table
     protected $table = "tbluserjob";
