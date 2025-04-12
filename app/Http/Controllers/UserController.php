@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\USerJob;
+use App\Models\UserJob;
 
 use Illuminate\Http\Response;
 use App\Traits\ApiResponser;
